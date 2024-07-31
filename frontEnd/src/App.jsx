@@ -3,7 +3,7 @@ import Routes from "./Routes/index.jsx";
 import history from "./helpers/history.jsx";
 import BrowserRouter from "./components/BrowserRouter.jsx";
 import "bootstrap/dist/css/bootstrap.css";
-import {Suspense} from "react";
+import React, {Suspense} from "react";
 import {Toaster} from "react-hot-toast";
 
 function App() {

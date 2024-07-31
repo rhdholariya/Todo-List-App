@@ -12,14 +12,17 @@ const useServiceProvider = () => {
         baseURL,
     });
 
-    const getData = useCallback(async (endpoint) => {
+    const getData = useCallback(
+      async (endpoint) => {
         try {
-            const response = await api.get(endpoint);
-            return response.data;
+          const response = await api.get(endpoint);
+          return response.data;
         } catch (error) {
-            throw error;
+          throw error;
         }
-    }, [api]);
+      },
+      [api]
+    );
 
     const postData = useCallback(async (endpoint, data) => {
         try {
