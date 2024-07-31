@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
-import TodoItem from "../../components/TodoItem.jsx";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import TodoItem from "../../Components/TodoItem";
+import { Button, Col, Row } from "react-bootstrap";
 import { Input } from "reactstrap";
-import Header from "../../components/Header.jsx";
-import HeroSection from "./HeroSection.jsx";
-import DeleteTodo from "../../components/deleteTodo.jsx";
-import ServiceProvider from "../../services/ServiceProvider.jsx";
+import Header from "../../Components/Header";
+import HeroSection from "./HeroSection";
+import DeleteTodo from "../../Components/DeleteTodo";
+import ServiceProvider from "../../Services/ServiceProvider";
 import toast from "react-hot-toast";
+import { Todo, useTodoContext } from "../../Context/TodoContext";
 
-const TodoList = () => {
-  const [todos, setTodos] = useState([]);
+interface ApiResponse {
+  message: string;
+  todo?:Todo;
+  todoList: Todo[];
+}
+
+const TodoList: React.FC = () => {
+  const {todos, setTodos,showRemoveModal,setShowRemoveModal} = useTodoContext();
   const { getData, postData, putData, deleteData } = ServiceProvider();
-  const baseUrl = import.meta.env.VITE_AXIOS_BASE_URL;
-  const [showRemoveModal, setShowRemoveModal] = useState({
-    show: false,
-    data: null,
-  });
-  const [addValue, setAddValue] = useState("");
-  const [editing, setEditing] = React.useState(false);
-  const [editingId, setEditingId] = React.useState(false);
+  const baseUrl = import.meta.env.VITE_AXIOS_BASE_URL as string;
+  const [addValue, setAddValue] = useState<string>("");
+  const [editing, setEditing] = useState<string | boolean>(false);
+  const [editingId, setEditingId] = useState<string | boolean | null >(null);
 
   useEffect(() => {
     getData("")
-      .then((response) => {
+      .then((response:any) => {
         setTodos(response.todoList);
       })
       .catch(() => {
@@ -30,49 +33,50 @@ const TodoList = () => {
       });
   }, []);
 
-  const handleComplete = (data, value) => {
+  const handleComplete = (data: Todo, value: boolean) => {
     putData(`${baseUrl}/${data._id}`, { isCompleted: value })
       .then(() => {
         setTodos(
-          todos.map((todo) =>
+          todos.map((todo:any) =>
             todo._id === data._id
               ? { ...todo, isCompleted: !todo.isCompleted }
               : todo
           )
         );
       })
-      .catch((err) => {
+      .catch((err:any) => {
         toast.error(err.response.data.message);
       });
   };
 
-  const handleEdit = (data, newText) => {
+  const handleEdit = (data: Todo, newText: string | undefined) => {
     setEditing(!editing);
     putData(`${baseUrl}/${data._id}`, { task: newText })
-      .then((res) => {
+      .then((res:ApiResponse) => {
         getData("")
-          .then((response) => {
+          .then((response:ApiResponse) => {
             setTodos(response.todoList);
           })
           .catch(() => {});
         toast.success(res.message);
       })
-      .catch((err) => {
+      .catch((err:any) => {
         toast.error(err.response.data.message);
       });
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: string | null) => {
+    if (!id) return;
     deleteData(`${baseUrl}/${id}`)
-      .then((res) => {
+      .then((res:ApiResponse) => {
         getData("")
-          .then((response) => {
+          .then((response:ApiResponse) => {
             setTodos(response.todoList);
           })
           .catch(() => {});
         toast.success(res.message);
       })
-      .catch((err) => {
+      .catch((err:any) => {
         toast.error(err.response.data.message);
       });
   };
@@ -80,21 +84,20 @@ const TodoList = () => {
   const addList = () => {
     let data = todos || [];
     postData(baseUrl, { task: addValue.trim() })
-      .then((response) => {
+      .then((response:ApiResponse) => {
         data.push(response.todo);
         setTodos([...data]);
         setAddValue("");
         toast.success(response.message);
       })
-      .catch((err) => {
+      .catch((err:any) => {
         if (err.response && err.response.data) {
           toast.error(err.response.data.message);
         }
       });
   };
-  const todos_completed = (todos || []).filter(
-    (todo) => todo.isCompleted
-  ).length;
+
+  const todos_completed = (todos || []).filter((todo:Todo) => todo.isCompleted).length;
 
   return (
     <>
@@ -105,8 +108,8 @@ const TodoList = () => {
           total_todos={(todos || []).length}
         />
       </div>
-      <Container>
-        <Row className="w-100 d-flex justify-content-center">
+      <div>
+        <Row className="d-flex justify-content-center">
           <Col md={10} className="p-0">
             <div className="d-flex align-items-end mb-2 gap-2 justify-content-center mb-4">
               <Input
@@ -131,32 +134,32 @@ const TodoList = () => {
               {(todos || []).length === 0 ? (
                 <div className="p-5">No data available</div>
               ) : (
-                <ul className="w-50">
-                  {(todos || []).map((todo, index) => (
-                    <TodoItem
-                      key={todo._id}
-                      index={index + 1}
-                      todo={todo}
-                      onComplete={handleComplete}
-                      onEdit={handleEdit}
-                      onDelete={setShowRemoveModal}
-                      isEditing={editingId === todo._id}
-                      setEditing={setEditingId}
-                    />
-                  ))}
-                </ul>
+                <div>
+                  <ul className="">
+                    {(todos || []).map((todo:Todo, index:number) => (
+                      <TodoItem
+                        key={todo._id}
+                        index={index + 1}
+                        todo={todo}
+                        onComplete={handleComplete}
+                        onEdit={handleEdit}
+                        onDelete={setShowRemoveModal}
+                        isEditing={editingId === todo._id}
+                        setEditing={setEditingId}
+                      />
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           </Col>
         </Row>
-      </Container>
+      </div>
       <DeleteTodo
-        showRemoveModal={showRemoveModal}
         onDelete={() => {
           handleDelete(showRemoveModal.data);
-          setShowRemoveModal({ show: !showRemoveModal, data: null });
+          setShowRemoveModal({ show: !showRemoveModal.show, data: null });
         }}
-        setShowRemoveModal={setShowRemoveModal}
       />
     </>
   );

@@ -1,6 +1,11 @@
 import React from "react";
 
-function HeroSection({ todos_completed, total_todos }) {
+interface HeroSectionProps {
+  todos_completed: number;
+  total_todos: number;
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({ todos_completed, total_todos }) => {
   return (
     <section className="todohero_section mb-5">
       <div>
@@ -12,6 +17,6 @@ function HeroSection({ todos_completed, total_todos }) {
       </div>
     </section>
   );
-}
+};
 
 export default HeroSection;

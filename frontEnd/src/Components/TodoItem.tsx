@@ -2,7 +2,23 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { Input } from "reactstrap";
 
-const TodoItem = ({
+interface Todo {
+  _id: string;
+  task: string;
+  isCompleted: boolean;
+}
+
+interface TodoItemProps {
+  index: number;
+  todo: Todo;
+  onComplete: (todo: Todo, isCompleted: boolean) => void;
+  onEdit: (todo: Todo, editedTask: string | undefined) => void;
+  onDelete: (modalState: { show: boolean; data: string }) => void;
+  isEditing: boolean;
+  setEditing: (id: string | boolean) => void;
+}
+
+const TodoItem: React.FC<TodoItemProps> = ({
   index,
   todo,
   onComplete,
@@ -11,10 +27,10 @@ const TodoItem = ({
   isEditing,
   setEditing,
 }) => {
-  const [editedTodo, setEditedTodo] = useState();
+  const [editedTodo, setEditedTodo] = useState<string | undefined>(undefined);
 
   return (
-    <li id={index} className="todo_item gap-3">
+    <li id={String(index)} className="todo_item gap-3">
       {isEditing ? (
         <div>
           <label htmlFor="edit-todo">

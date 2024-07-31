@@ -28,7 +28,7 @@ const allList = async (req, res) => {
     try {
         const todoList = await getAllTodos();
         if (todoList.length === 0) {
-            return res.status(200).json({ message: todoMessage.error.todosNotFound , todo:[]});
+            return res.status(200).json({ message: todoMessage.error.todosNotFound , todoList:[]});
         }
         return res.status(200).json({ message: todoMessage.success.fetchTodosSuccess , todoList });
     } catch (err) {
@@ -58,7 +58,7 @@ const update = async (req, res) => {
         if (!updatedTodo) {
             return res.status(404).json({ message: todoMessage.error.todoNotFound });
         }
-        return res.status(200).json({ message: todoMessage.success.todoUpdateSuccess ,todo:updatedTodo });
+        return res.status(200).json({ message: todoMessage.success.todoUpdateSuccess ,todoList:updatedTodo });
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: todoMessage.error.genericError });

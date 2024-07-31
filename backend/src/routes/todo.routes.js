@@ -10,7 +10,6 @@ router.put('/:id', update);
 router.delete('/:id', remove);
 
 router.get('*', (req, res) => {
-    res.send('Handling unconventional todo route');
     return res.status(400).json({ message: todoMessage.error.handleUnconvational });
 });
 

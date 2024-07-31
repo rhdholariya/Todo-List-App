@@ -1,8 +1,16 @@
 import React from "react";
 import { Modal, ModalFooter, ModalHeader } from "reactstrap";
 import { Button } from "react-bootstrap";
+import { useTodoContext } from "../Context/TodoContext";
 
-const DeleteTodo = ({ showRemoveModal, onDelete, setShowRemoveModal }) => {
+interface DeleteTodoProps {
+  onDelete: () => void;
+}
+
+const DeleteTodo: React.FC<DeleteTodoProps> = ({
+  onDelete,
+}) => {
+  const {showRemoveModal,setShowRemoveModal} = useTodoContext();
   return (
     <div>
       <Modal isOpen={showRemoveModal.show} centered>
@@ -18,7 +26,7 @@ const DeleteTodo = ({ showRemoveModal, onDelete, setShowRemoveModal }) => {
           <Button
             className="btn btn-primary"
             onClick={() =>
-              setShowRemoveModal({ show: !showRemoveModal, data: null })
+              setShowRemoveModal({ show: !showRemoveModal.show, data: null })
             }
           >
             Cancel

@@ -1,4 +1,6 @@
-function Header() {
+import React from "react";
+
+const Header: React.FC = () => {
   return (
     <header>
       <svg
@@ -20,6 +22,6 @@ function Header() {
       <h1>TODO</h1>
     </header>
   );
-}
+};
 
 export default Header;
