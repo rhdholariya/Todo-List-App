@@ -35,11 +35,13 @@ const TodoItem: React.FC<TodoItemProps> = ({
         <div>
           <label htmlFor="edit-todo">
             <Input
-              type="text"
+              className="no-resize"
+              type="textarea"
               name="edit-todo"
               id="edit-todo"
               defaultValue={todo?.task}
               onChange={(e) => setEditedTodo(e.target.value)}
+              rows="5"
             />
           </label>
         </div>
