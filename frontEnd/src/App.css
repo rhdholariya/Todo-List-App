@@ -97,8 +97,10 @@ header {
   padding: 0 15px;
 }
 .todo_list_table > div{
-  max-width: 455px;
+  max-width: fit-content;
+  min-width:455px;
   width: 100%;
+  overflow-x: auto;
 }
 .todo_list_table > div ul{
   width: 100%;
@@ -207,8 +209,11 @@ input::placeholder {
 @media(max-width:450px) {
   .todo_list_table > div{
     max-width: 100%;
+    min-width: 100%;
+    overflow-x:auto ;
   }
   .todo_list_table > div ul{
     padding: 0 20px;
+    width: fit-content;
   }
 }

@@ -84,7 +84,7 @@ const TodoList: React.FC = () => {
   const addList = () => {
     let data = todos || [];
     postData(baseUrl, { task: addValue.trim() })
-      .then((response:ApiResponse) => {
+      .then((response:any) => {
         data.push(response.todo);
         setTodos([...data]);
         setAddValue("");
@@ -111,7 +111,10 @@ const TodoList: React.FC = () => {
       <div>
         <Row className="d-flex justify-content-center">
           <Col md={10} className="p-0">
-            <div className="d-flex align-items-end mb-2 gap-2 justify-content-center mb-4">
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                addList();
+            }} className="d-flex align-items-end mb-2 gap-2 justify-content-center mb-4">
               <Input
                 type="text"
                 name="todo"
@@ -124,12 +127,12 @@ const TodoList: React.FC = () => {
               <Button
                 type="submit"
                 className="add_task"
-                onClick={() => addList()}
+                // onClick={() => addList()}
                 disabled={!(addValue && addValue.trim())}
               >
                 + Add
               </Button>
-            </div>
+            </form>
             <div className="todo_list_table d-flex justify-content-center">
               {(todos || []).length === 0 ? (
                 <div className="p-5">No data available</div>
